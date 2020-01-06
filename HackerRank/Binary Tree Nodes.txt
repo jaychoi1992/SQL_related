@@ -1,0 +1,49 @@
+You are given a table, BST, containing two columns: N and P, where N represents the value of a node in Binary Tree, and P is the parent of N.
+
+Write a query to find the node type of Binary Tree ordered by the value of the node. Output one of the following for each node:
+* Root: If node is root node.
+* Leaf: If node is leaf node.
+* Inner: If node is neither root nor leaf node.
+
+Other answer: 
+
+Answer1:
+SELECT n,
+
+    CASE
+        WHEN p IS NULL THEN 'Root'
+        WHEN EXISTS (SELECT * FROM bst in_bst WHERE in_bst.p = out_bst.n) THEN 'Inner'
+        ELSE 'Leaf'
+    END
+FROM bst out_bst
+ORDER BY n;
+
+Answer2: 
+SELECT n,
+	CASE
+		WHEN p IS NULL THEN 'Root'
+		WHEN n IN (SELECT DISTINCT p FROM bst) THEN 'Inner'
+		ELSE 'Leaf'
+	END
+FROM bst
+ORDER BY n;
+
+Answer3:
+SELECT n,
+	CASE
+		WHEN p IS NULL THEN 'Root'
+		WHEN ((SELECT COUNT(*) FROM bst in_bst WHERE in_bst.p = out_bst.n) > 0) THEN 'Inner'
+		ELSE 'Leaf'
+	END
+FROM bst out_bst
+ORDER BY n;
+
+Answer4:
+SELECT n,
+	CASE
+		WHEN p IS NULL THEN 'Root'
+		WHEN n IN (SELECT bst_1.p FROM bst bst_1 JOIN bst bst_2 ON bst_1.p = bst_2.n) THEN 'Inner'
+		ELSE 'Leaf'
+	END
+FROM bst
+ORDER BY n;

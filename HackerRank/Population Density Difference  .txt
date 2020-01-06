@@ -1,0 +1,4 @@
+Query the difference between the maximum and minimum populations in CITY.
+
+My answer:
+SELECT MAX(POPULATION) - MIN(POPULATION) FROM CITY;
